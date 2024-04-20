@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // Declare a variable to hold the timeout reference
+        let timeout;
+
+        // Function to debounce the populateDiv function
+        function debouncepopulateDiv() {
+            // Clear any previously set timeout to avoid multiple executions
+            clearTimeout(timeout);
+            // Set a new timeout to delay the call to populateDiv by 1000 milliseconds (1 second)
+            timeout = setTimeout(function () {
+                populateDiv();
+            }, 1000);
+        }
+
+        // Clear timeout outside the debounce function to prevent error
+        clearTimeout(timeout);
+
+        // Function to populate the div with the sum of the input numbers
+        function populateDiv() {
+            // Retrieve the values of the input fields
+            const a = document.getElementById("firstNumber").value;
+            const b = document.getElementById("secondNumber").value;
+
+            // Fetch data from the server
+            fetch("https://sum-server.100xdevs.com/sum?a=" + a + "&b=" + b)
+                .then(function (response) {
+                    // Log the response from the server
+                    console.log(response);
+                    // Extract the text from the response
+                    response.text()
+                        .then(function (ans) {
+                            // Set the inner HTML of the finalsum div to the received answer
+                            document.getElementById("finalsum").innerHTML = ans;
+                        })
+                });
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Input fields triggering debouncepopulateDiv on input -->
+    <input oninput="debouncepopulateDiv()" type="text" id="firstNumber" placeholder="First number"> <br> <br>
+    <input oninput="debouncepopulateDiv()" type="text" id="secondNumber" placeholder="Second number"> <br><br>
+
+    <!-- Div to display the final sum -->
+    <div id="finalsum"></div>
+</body>
+
+</html>
